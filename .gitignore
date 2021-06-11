@@ -9,6 +9,9 @@
 # production
 /build
 
+# 打包
+/dist
+
 # misc
 .DS_Store
 .env
