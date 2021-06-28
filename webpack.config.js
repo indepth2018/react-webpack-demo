@@ -8,10 +8,10 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
  module.exports = {
-    // devtool: 'inline-source-map',
-    entry: {
-        index: './src/index.js'
-    },
+	// devtool: 'inline-source-map',
+	entry: {
+		index: './src/index.js'
+	},
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -22,9 +22,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
                 test: /\.(css|less)$/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader', {
-                        loader: 'less-loader',
-                    }, ],
+                    use: [
+                        {
+                            loader: 'css-loader',
+                        },
+                        {
+                            loader: 'less-loader',
+                        },
+                        {
+                            loader: 'postcss-loader',
+                        },
+                    ],
                 })
             },
             {
