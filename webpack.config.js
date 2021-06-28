@@ -5,7 +5,7 @@ const HtmlPlugin = require('html-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // 将样式提取到css文件
-// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const nodeExternals = require('webpack-node-externals');
  module.exports = {
     // devtool: 'inline-source-map',
@@ -17,13 +17,20 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
         path: path.resolve(__dirname, 'dist')
     },
     module: {
-        rules: [{
-            test: /\.css$/,
-            loader:['style-loader', 'css-loader']
-        }, {
-            test: /\.scss$/,
-            loader: ['style-loader', 'css-loader', 'sass-loader']
-        }, {
+        rules: [
+            {
+                test: /\.(css|less)$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', {
+                        loader: 'less-loader',
+                    }, ],
+                })
+            },
+            {
+                test: /\.scss$/,
+                loader: ['style-loader', 'css-loader', 'sass-loader']
+            }, {
         //     {
         //     test: /\.css$/,
         //     exclude: /node_modules/,
@@ -40,17 +47,17 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
         //         use: ['css-loader', 'postcss-loader'],
         //     })
         // }, {
-            test: /\.(png|svg|jpg|gif)$/,
-            loader: 'url-loader',
-            options: {
-                limit: 10000,
-                name: 'img/[name].[hash:7].[ext]'
-            }
-        }, {
-            test: /\.(js|jsx)$/,
-            loader: 'babel-loader',
-            exclude: /node_modules/
-        }]
+                test: /\.(png|svg|jpg|gif)$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'img/[name].[hash:7].[ext]'
+                }
+            }, {
+                test: /\.(js|jsx)$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/
+            }]
     },
     devServer: {
         contentBase: './build',
@@ -64,7 +71,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
         new HtmlPlugin({
             template: 'src/index.html'
         }),
-        new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
-        // new ExtractTextPlugin({ filename: '[name].[contenthash].css', allChunks: false })
+        // new BundleAnalyzerPlugin({ analyzerPort: 8919 }),
+        new ExtractTextPlugin('[name].css')
     ]
 }
